@@ -10,6 +10,7 @@ public class PlGravity : MonoBehaviour
     Vector3 saveGravityForth;
     Vector3 pos;
 
+    bool isJump;
     float sid;
     float fixPos;
     string saveGroundName;
@@ -29,18 +30,14 @@ public class PlGravity : MonoBehaviour
     {
         pos = rb.position;
 
-        if (!Input.GetKey(KeyCode.Alpha6) && !Input.GetKey(KeyCode.Alpha4) &&
-            !Input.GetKey(KeyCode.Alpha8) && !Input.GetKey(KeyCode.Alpha2))
+        if (!PlGravityControl.isAttack)
         {
             //向きを変える
             rb.rotation = ang;
-            Debug.Log(saveGravityForth);
+
             //重力の移動処理
             rb.AddForce(gravityForth);
         }
-        else gravityForth = saveGravityForth;
-
-        //gravityForthがゼロになるのでバグが起きる
 
         //位置修正
         switch (saveGroundName)
@@ -65,9 +62,6 @@ public class PlGravity : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         gravityForth = Vector3.zero;
-
-        //重力が発生する場所の名前を保存
-        if (other.gameObject.tag != "Ground") saveGroundName = other.gameObject.tag;
 
         //重力の力の向き
         switch (other.gameObject.tag)
@@ -104,7 +98,12 @@ public class PlGravity : MonoBehaviour
 
             default: break;
         }
-        saveGravityForth = gravityForth;
+        //重力が発生する場所の名前を保存
+        if (other.gameObject.tag != "Ground")
+        {
+            saveGroundName = other.gameObject.tag;
+            saveGravityForth = gravityForth;
+        }
     }
     private void OnTriggerStay(Collider other)
     {
@@ -141,11 +140,12 @@ public class PlGravity : MonoBehaviour
             case "GroundLeft": ang.eulerAngles = new Vector3(sid, 0, -90); break;
             default: break;
         }
+        gravityForth = saveGravityForth;
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        慣性の消去
+        //慣性の消去
         if (collision.gameObject.tag == "Ground")
         {
             if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)

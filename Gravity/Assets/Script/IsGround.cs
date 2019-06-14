@@ -10,12 +10,12 @@ public class IsGround : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "Field") isReady = true;
+        if (other.gameObject.tag == "Ground") isReady = true;
     }
     public void OnTriggerExit(Collider other)
     {
         //Debug.Log("地面ではない");
-        if (other.gameObject.tag != "Field") isReady = false;
+        if (other.gameObject.tag == "Ground") isReady = false;
     }
 
 }

@@ -5,19 +5,24 @@ using UnityEngine;
 public class PlGravityControl : MonoBehaviour
 {
     Rigidbody rb;
-    Vector3 JumpForth;
-    Quaternion Ang;
+    Vector3 jumpForth;
+    Vector3 attackForth;
+    Quaternion ang;
 
     float sid;
+    bool isSlip;
 
     string saveGroundName;
     public float jumpPower;
     public float attackSpeed;
 
+    public static bool isAttack { set; get; }
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        ang.eulerAngles = new Vector3(0, 0, sid);
     }
 
     // Update is called once per frame
@@ -25,46 +30,84 @@ public class PlGravityControl : MonoBehaviour
     {
         if (IsGround.isReady)
         {
+            isSlip = false;
+            attackForth = Vector3.zero;
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                rb.AddForce(JumpForth);
+                //ジャンプ
+                rb.velocity = jumpForth;
             }
         }
         else
         {
-            
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                rb.rotation = ang;  //回転
+                isAttack = true;
+
+                //慣性の消去
+                if (!isSlip)
+                {
+                    rb.velocity = Vector3.zero;
+                    isSlip = true;
+                }
+
+                //移動の代入
+                switch (saveGroundName)
+                {
+                    case "GroundForward":
+                    case "GroundBack":
+                    case "GroundUp":
+                    case "GroundDown":
+                        if (Input.GetAxis("Horizontal") > 0) attackForth = Vector3.right * attackSpeed;
+                        if (Input.GetAxis("Horizontal") < 0) attackForth = Vector3.left * attackSpeed;
+                        break;
+
+                    case "GroundRight":
+                    case "GroundLeft":
+                        if (Input.GetAxis("Vertical") < 0) attackForth = Vector3.forward * attackSpeed;
+                        if (Input.GetAxis("Vertical") > 0) attackForth = Vector3.back * attackSpeed;
+                        break;
+
+                    default: break;
+                }
+                //移動
+                rb.AddForce(attackForth);
+            }
+            else isAttack = false;
         }
-        rb.rotation = Ang;
     }
     private void OnTriggerEnter(Collider other)
     {
         rb.velocity = Vector3.zero;
         if (other.gameObject.tag != "Ground") saveGroundName = other.gameObject.tag;
 
+        //ジャンプする方向の定義
         switch (other.gameObject.tag)
         {
             case "GroundForward":
-                JumpForth = Vector3.back * jumpPower;
+                jumpForth = Vector3.back * jumpPower;
                 break;
 
             case "GroundBack":
-                JumpForth = Vector3.forward * jumpPower;
+                jumpForth = Vector3.forward * jumpPower;
                 break;
 
             case "GroundUp":
-                JumpForth = Vector3.down * jumpPower;
+                jumpForth = Vector3.down * jumpPower;
                 break;
 
             case "GroundDown":
-                JumpForth = Vector3.up * jumpPower;
+                jumpForth = Vector3.up * jumpPower;
                 break;
 
             case "GroundRight":
-                JumpForth = Vector3.left * jumpPower;
+                jumpForth = Vector3.left * jumpPower;
                 break;
 
             case "GroundLeft":
-                JumpForth = Vector3.right * jumpPower;
+                jumpForth = Vector3.right * jumpPower;
                 break;
 
             default: break;
@@ -72,20 +115,21 @@ public class PlGravityControl : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
+        //傾ける方向
         switch (saveGroundName)
         {
             case "GroundForward":
             case "GroundBack":
             case "GroundUp":
             case "GroundDown":
-                if (Input.GetKey(KeyCode.Alpha6)) sid = -90;
-                if (Input.GetKey(KeyCode.Alpha4)) sid = 90f;
+                if (Input.GetAxis("Horizontal") < 0) sid = -90;
+                if (Input.GetAxis("Horizontal") > 0) sid = 90f;
                 break;
 
             case "GroundRight":
             case "GroundLeft":
-                if (Input.GetKey(KeyCode.Alpha8)) sid = 180;
-                if (Input.GetKey(KeyCode.Alpha2)) sid = 0f;
+                if (Input.GetAxis("Vertical") < 0) sid = 180;
+                if (Input.GetAxis("Vertical") > 0) sid = 0f;
                 break;
 
             default: break;
@@ -96,12 +140,12 @@ public class PlGravityControl : MonoBehaviour
             case "GroundBack": 
             case "GroundUp": 
             case "GroundDown":
-                Ang.eulerAngles = new Vector3(0, 0, sid);
+                ang.eulerAngles = new Vector3(0, 0, sid);
                 break;
 
             case "GroundRight":
             case "GroundLeft":
-                Ang.eulerAngles = new Vector3(90, sid, 0); break;
+                ang.eulerAngles = new Vector3(90, sid, 0); break;
 
             default: break;
         }
