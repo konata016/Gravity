@@ -40,6 +40,8 @@ public class PlGravity : MonoBehaviour
         }
         else gravityForth = saveGravityForth;
 
+        //gravityForthがゼロになるのでバグが起きる
+
         //位置修正
         switch (saveGroundName)
         {
