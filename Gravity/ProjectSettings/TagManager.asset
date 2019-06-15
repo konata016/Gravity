@@ -11,6 +11,8 @@ TagManager:
   - GroundRight
   - GroundLeft
   - Ground
+  - Attack
+  - Enemy
   layers:
   - Default
   - TransparentFX

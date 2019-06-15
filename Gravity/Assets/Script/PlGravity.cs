@@ -42,13 +42,13 @@ public class PlGravity : MonoBehaviour
         //位置修正
         switch (saveGroundName)
         {
-            case "GroundForward":
-            case "GroundBack":
             case "GroundUp":
             case "GroundDown":
                 transform.position = Vector3.MoveTowards(rb.position, new Vector3(pos.x, pos.y, fixPos), 10);
                 break;
 
+            case "GroundForward":
+            case "GroundBack":
             case "GroundRight":
             case "GroundLeft":
                 transform.position = Vector3.MoveTowards(rb.position, new Vector3(pos.x, fixPos, pos.z), 10);
@@ -60,40 +60,43 @@ public class PlGravity : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        rb.velocity = Vector3.zero;
-        gravityForth = Vector3.zero;
-
         //重力の力の向き
         switch (other.gameObject.tag)
         {
             case "GroundForward":
                 gravityForth = Vector3.forward * gravity;
                 fixPos = other.transform.root.transform.position.y;
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
                 break;
 
             case "GroundBack":
                 gravityForth = Vector3.back * gravity;
                 fixPos = other.transform.root.transform.position.y;
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
                 break;
 
             case "GroundUp":
                 gravityForth = Vector3.up * gravity;
                 fixPos = other.transform.root.transform.position.z;
+                rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
                 break;
 
             case "GroundDown":
                 gravityForth = Vector3.down * gravity;
                 fixPos = other.transform.root.transform.position.z;
+                rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
                 break;
 
             case "GroundRight":
                 gravityForth = Vector3.right * gravity;
                 fixPos = other.transform.root.transform.position.y;
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
                 break;
 
             case "GroundLeft":
                 gravityForth = Vector3.left * gravity;
                 fixPos = other.transform.root.transform.position.y;
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
                 break;
 
             default: break;
@@ -155,4 +158,5 @@ public class PlGravity : MonoBehaviour
             }
         }
     }
+
 }

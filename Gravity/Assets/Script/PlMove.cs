@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlMove : MonoBehaviour
 {
     Rigidbody rb;
+    bool isMove;
     float rivalSpeed;
     string saveGroundName;
 
@@ -32,10 +33,12 @@ public class PlMove : MonoBehaviour
                     if (Input.GetAxis("Horizontal") < 0)
                     {
                         rb.AddForce(rivalSpeed * ((Vector3.left * speed) - rb.velocity));
+                        isMove = true;
                     }
                     if (Input.GetAxis("Horizontal") > 0)
                     {
                         rb.AddForce(rivalSpeed * ((Vector3.right * speed) - rb.velocity));
+                        isMove = true;
                     }
                     break;
 
@@ -44,10 +47,12 @@ public class PlMove : MonoBehaviour
                     if (Input.GetAxis("Vertical") < 0)
                     {
                         rb.AddForce(rivalSpeed * ((Vector3.back * speed) - rb.velocity));
+                        isMove = true;
                     }
                     if (Input.GetAxis("Vertical") > 0)
                     {
                         rb.AddForce(rivalSpeed * ((Vector3.forward * speed) - rb.velocity));
+                        isMove = true;
                     }
                     break;
 
@@ -55,11 +60,12 @@ public class PlMove : MonoBehaviour
             }
 
             //慣性の消去
-            if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+            if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0 && isMove)
             {
                 //rb.velocity = Vector3.zero;
                 rb.isKinematic = true;
                 rb.isKinematic = false;
+                isMove = false;
             }
         }
     }
