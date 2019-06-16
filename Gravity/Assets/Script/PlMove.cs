@@ -72,6 +72,6 @@ public class PlMove : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "Ground") saveGroundName = other.gameObject.tag;
+        if (other.gameObject.tag != "Ground" && other.gameObject.tag != "Enemy") saveGroundName = other.gameObject.tag;
     }
 }
