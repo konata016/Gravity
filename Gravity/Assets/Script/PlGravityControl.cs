@@ -51,7 +51,7 @@ public class PlGravityControl : MonoBehaviour
                 //慣性の消去
                 if (!isSlip)
                 {
-                    rb.velocity = Vector3.zero;
+                    //rb.velocity = Vector3.zero;
                     isSlip = true;
                 }
 
