@@ -13,6 +13,8 @@ TagManager:
   - Ground
   - Attack
   - Enemy
+  - ShieldEnemy
+  - Needle
   layers:
   - Default
   - TransparentFX
@@ -23,8 +25,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
+  - Ground
+  - MoveBlock
   - 
   - 
   - 

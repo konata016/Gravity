@@ -44,8 +44,8 @@ public class PlGravityControl : MonoBehaviour
         }
         else
         {
-            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            {
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0 )
+            { 
                 isAttack = true;
 
                 //慣性の消去
@@ -64,20 +64,23 @@ public class PlGravityControl : MonoBehaviour
                     case "GroundDown":
                         if (Input.GetAxis("Horizontal") > 0) attackForth = Vector3.right * attackSpeed;
                         if (Input.GetAxis("Horizontal") < 0) attackForth = Vector3.left * attackSpeed;
-                        if(Input.GetAxis("Horizontal") != 0) rb.rotation = ang;  //回転
+                        if (Input.GetAxis("Horizontal") != 0 && InputKey.isGravityControl) rb.rotation = ang;  //回転
                         break;
 
                     case "GroundRight":
                     case "GroundLeft":
                         if (Input.GetAxis("Vertical") < 0) attackForth = Vector3.back * attackSpeed;
                         if (Input.GetAxis("Vertical") > 0) attackForth = Vector3.forward * attackSpeed;
-                        if (Input.GetAxis("Vertical") != 0) rb.rotation = ang;  //回転
+                        if (Input.GetAxis("Vertical") != 0 && InputKey.isGravityControl) rb.rotation = ang;  //回転
                         break;
 
                     default: break;
                 }
                 //移動
-                rb.AddForce(attackForth);
+                if (InputKey.isGravityControl)
+                {
+                    if(rb.velocity.magnitude < 50.0f) rb.AddForce(attackForth);
+                }
             }
             else isAttack = false;
         }

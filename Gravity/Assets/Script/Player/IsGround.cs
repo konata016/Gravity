@@ -9,11 +9,16 @@ public class IsGround : MonoBehaviour
     public static bool isReady;
 
     public GameObject effect;
+    string saveGroundName;
     GameObject obj;
 
-    public void OnTriggerEnter(Collider other)
+
+    public void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Ground") isReady = true;
+    }
+    public void OnTriggerEnter(Collider other)
+    {
         if (other.gameObject.tag == "Enemy") obj=Instantiate(effect, transform);
         Destroy(obj, 0.1f);
     }
